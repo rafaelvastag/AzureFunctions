@@ -11,8 +11,10 @@ namespace AzureFunction.Config
         {
             DependencyInjection.Initialize(builder =>
              {
-                // builder.RegisterType<Dog>();
-                builder.RegisterType<Cat>().As<IAnimal>();
+                 // builder.RegisterType<Dog>();
+                 // builder.RegisterType<Cat>().As<IAnimal>();
+                 builder.RegisterType<Cat>().Named<IAnimal>("Cat");
+                 builder.RegisterType<Dog>().Named<IAnimal>("Dog");
              }, functionName);
         }
     }
