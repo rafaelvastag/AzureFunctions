@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AzureFunction.Functions
@@ -23,6 +26,18 @@ namespace AzureFunction.Functions
         ILogger log, [Inject] IAnimal animal)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+
+            string responseMessage = $"Your Animal make: {animal.MakeNoise()}";
+
+            return new OkObjectResult(responseMessage);
+        }
+
+        [FunctionName("IAnimalDependencyInjectionTesting")]
+        public static async Task<ActionResult<ObjectResult>> IAnimalDependencyTesting(
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "animal")] HttpRequestMessage req,
+        TraceWriter log, [Inject] IAnimal animal)
+        {
+            log.Info("C# HTTP trigger function processed a request.");
 
             string responseMessage = $"Your Animal make: {animal.MakeNoise()}";
 

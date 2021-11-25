@@ -11,7 +11,7 @@ namespace AzureFunction.Models
 
         public string MakeNoise()
         {
-            return "Au Au";
+            return "Au Au...";
         }
     }
 }
