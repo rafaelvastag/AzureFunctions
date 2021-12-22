@@ -3,8 +3,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Net;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CodeFirstUnitOfWork.AccountAdder
@@ -12,44 +13,72 @@ namespace CodeFirstUnitOfWork.AccountAdder
     public class AccountAdder
     {
 
-        private readonly BankContext _context;
+       // private readonly BankContext _context;
 
-        public AccountAdder(BankContext context)
+        public AccountAdder()
         {
-            _context = context;
+            // _context = context;
         }
 
         [FunctionName("AccountAdder")]
-        public async Task<HttpResponseMessage> RegisterAccount(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequestMessage req, ILogger log)
+        public async Task<string> RegisterAccount(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "account")] HttpRequestMessage req, ILogger log)
         {
             log.LogInformation("Received new account register request");
 
             try
             {
                 var user = await req.Content.ReadAsAsync<User>();
+                log.LogInformation("User: " + user.FirstName);
 
                 if (null != user)
                 {
+                    for (int i = 0; i < 100; i++)
+                    {
+                        log.LogInformation("Calculating.. " + i);
+                    }
                     log.LogInformation("Saving new User..");
 
-
-                    _context.Users.Add(user);
-                    await _context.SaveChangesAsync();
+                    Thread.Sleep(100);
+                    // _context.Users.Add(user);
+                    //await _context.SaveChangesAsync();
+                    return "POST NEW ITEM - WITH 100ms THREAD SLEEP FOR USER: " + user.FirstName + " " + user.LastName;
                 }
                 else
                 {
                     log.LogError("Failed to parse user received");
-                    return req.CreateErrorResponse(HttpStatusCode.BadRequest, "Failed to parse user received");
+                    return "Failed to parse user received";
                 }
             }
             catch (Exception e)
             {
-
-                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                throw e;
             }
+        }
 
-            return req.CreateResponse(HttpStatusCode.OK);
+        [FunctionName("AccountGet")]
+        public List<string> getAccounts(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "account")] HttpRequestMessage req, ILogger log)
+        {
+           log.LogInformation("Received new account register request");
+
+            try
+            {
+                List<string> list = new List<string>();
+                for (int i = 0; i < 100; i++)
+                {
+                        Thread.Sleep(10);
+                        log.LogInformation("Item " + i);
+                        list.Add("Item " + i + " - With 10ms thread speed after each item");
+                }
+                log.LogInformation(list.ToString());
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw e; 
+            }
         }
     }
 }
