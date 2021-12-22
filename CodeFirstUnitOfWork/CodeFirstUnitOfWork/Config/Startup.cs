@@ -1,4 +1,6 @@
-﻿using CodeFirstUnitOfWork.DBContext;
+﻿using AutoMapper;
+using AzFunctionsPocs.Config;
+using CodeFirstUnitOfWork.DBContext;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,12 @@ namespace CodeFirstUnitOfWork.Config
 
             builder.Services.AddDbContext<PoCContext>(
                options => SqlServerDbContextOptionsExtensions.UseSqlServer(options, connectionString));
+
+            var mappingConfig = new MapperConfiguration(mc => {
+                mc.AddProfile(new AutoMapperProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
         }
     }
 }

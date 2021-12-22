@@ -1,3 +1,5 @@
+using AutoMapper;
+using AzFunctionsPocs.Models;
 using CodeFirstUnitOfWork.DBContext;
 using CodeFirstUnitOfWork.Models;
 using Microsoft.AspNetCore.Http;
@@ -19,10 +21,12 @@ namespace CodeFirstUnitOfWork.AzureWithAzureSQL
     {
 
         private readonly PoCContext _context;
+        private readonly IMapper _mapper;
 
-        public SQLFunctions(PoCContext context)
+        public SQLFunctions(PoCContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [FunctionName("Create")]
@@ -47,6 +51,7 @@ namespace CodeFirstUnitOfWork.AzureWithAzureSQL
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "poc")] HttpRequest req, ILogger log)
         {
             List<PoCXp> regs = new List<PoCXp>();
+            List<PoCXpDTO> regsDTO = new List<PoCXpDTO>();
             try
             {
                 regs = await _context.POC_PARTNER_XP.ToListAsync();
@@ -69,12 +74,13 @@ namespace CodeFirstUnitOfWork.AzureWithAzureSQL
                 //        regs.Add(reg);
                 //    }
                 //}
+                regsDTO = _mapper.Map<List<PoCXpDTO>>(regs);
             }
             catch (Exception e)
             {
                 log.LogError(e.ToString());
             }
-            return new OkObjectResult(regs);
+            return new OkObjectResult(regsDTO);
         }
 
         [FunctionName("GetById")]

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzFunctionCompare", "AzFunctionCompare\AzFunctionCompare.csproj", "{E8FCFC8A-7351-40A9-98B1-17E4BEF9A9B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8FCFC8A-7351-40A9-98B1-17E4BEF9A9B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8FCFC8A-7351-40A9-98B1-17E4BEF9A9B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8FCFC8A-7351-40A9-98B1-17E4BEF9A9B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8FCFC8A-7351-40A9-98B1-17E4BEF9A9B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72750BDD-0B69-40F3-BDC5-7C7B218C22E7}
+	EndGlobalSection
+EndGlobal
