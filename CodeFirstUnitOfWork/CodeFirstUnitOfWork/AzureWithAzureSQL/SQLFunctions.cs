@@ -84,51 +84,74 @@ namespace CodeFirstUnitOfWork.AzureWithAzureSQL
         }
 
         [FunctionName("GetById")]
-        public static IActionResult GetTaskById(
+        public async Task<IActionResult> GetTaskById(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "poc/{id}")] HttpRequest req, ILogger log, int id)
         {
+            PoCXp res = new PoCXp();
             try
             {
-
+                res = await _context.POC_PARTNER_XP.FirstOrDefaultAsync(p=> p.Id == id);
+                log.LogInformation(res.ToString());
             }
             catch (Exception e)
             {
                 log.LogError(e.ToString());
             }
-            return new OkObjectResult("ok");
+            return new OkObjectResult(_mapper.Map<PoCXpDTO>(res));
         }
 
         [FunctionName("Delete")]
-        public static IActionResult DeleteTask(
+        public async Task<IActionResult> DeleteTask(
         [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "poc/{id}")] HttpRequest req, ILogger log, int id)
         {
             try
             {
+               var res = await _context.POC_PARTNER_XP.FirstOrDefaultAsync(p => p.Id == id);
 
+                if (res != null)
+                {
+                    _context.POC_PARTNER_XP.Remove(res);
+                    await _context.SaveChangesAsync();
+                    return new OkObjectResult(true);
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
             }
             catch (Exception e)
             {
                 log.LogError(e.ToString());
                 return new BadRequestResult();
             }
-            return new OkResult();
         }
 
         [FunctionName("Update")]
-        public static async Task<IActionResult> UpdateTask(
+        public async Task<IActionResult> UpdateTask(
         [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "poc/{id}")] HttpRequest req, ILogger log, int id)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var input = JsonConvert.DeserializeObject<UpdatePoCXp>(requestBody);
             try
             {
+                var res = await _context.POC_PARTNER_XP.FirstOrDefaultAsync(p => p.Id == id);
 
+                if (res != null)
+                {
+                    _context.POC_PARTNER_XP.Update(res);
+                    await _context.SaveChangesAsync();
+                    return new OkObjectResult(_mapper.Map<PoCXpDTO>(res));
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
             }
             catch (Exception e)
             {
                 log.LogError(e.ToString());
+                return new BadRequestResult();
             }
-            return new OkResult();
         }
     }
 }
